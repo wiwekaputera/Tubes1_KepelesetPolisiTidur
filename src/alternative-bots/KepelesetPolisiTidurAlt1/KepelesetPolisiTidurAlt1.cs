@@ -10,6 +10,8 @@ public class KepelesetPolisiTidurAlt1 : Bot
     // Variabel untuk menyimpan koordinat target terakhir yang terdeteksi
     private double targetX = 0;
     private double targetY = 0;
+    // Flag untuk menentukan arah rotasi senjata
+    private bool rotateGunRight = true;
 
     static void Main()
     {
@@ -32,24 +34,36 @@ public class KepelesetPolisiTidurAlt1 : Bot
         {
             if (closestBotId != -1)
             {
-                double angleToTarget = BearingTo(targetX, targetY);
-                double turnAngle = NormalizeRelativeAngle(angleToTarget - Direction);
-                TurnRight(turnAngle);
+                Forward(50);
+                
+                // Alternating gun rotation biar scanning lebih merata
+                if (rotateGunRight) TurnGunRight(360);
+                else TurnGunLeft(360);
+                rotateGunRight = !rotateGunRight;
 
-                // TODO: Greedy movement
-                // TODO: TurnGun sebanyak selisih ke closestBotId
-                Forward(100);
-                TurnGunRight(360);
-                Back(100);
-                TurnGunRight(360);
+                Back(50);
+
+                if (rotateGunRight) TurnGunRight(360);
+                else TurnGunLeft(360);
+                rotateGunRight = !rotateGunRight;
             }
             else
             {
-                TurnGunRight(360);
+                // Jika tidak ada target, scan 360
+                if (rotateGunRight)
+                {
+                    TurnGunRight(360);
+                }
+                else
+                {
+                    TurnGunLeft(360);
+                }
+                rotateGunRight = !rotateGunRight;
             }
         }
     }
 
+    // Constantly update bot musuh terdekat
     public override void OnScannedBot(ScannedBotEvent evt)
     {
         double dist = DistanceTo(evt.X, evt.Y);
@@ -65,6 +79,13 @@ public class KepelesetPolisiTidurAlt1 : Bot
         {
             Fire(1);
         }
+    }
+
+    public override void OnHitWall(HitWallEvent evt)
+    {
+        // Cabut dari tembok
+        Back(50);
+        TurnRight(90);
     }
 
     public override void OnBotDeath(BotDeathEvent evt)
