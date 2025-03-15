@@ -64,8 +64,6 @@ public class KepelesetPolisiTidurAlt1 : Bot
         if (evt.ScannedBotId == closestBotId)
         {
             Fire(1);
-        } else {
-            Fire(1);
         }
     }
 
