@@ -6,10 +6,10 @@
         "Hasri Fayadh",
         "I Made Wiweka"
     ],
-    "description": "Deskripsi strategi greedy yang digunakan",
+    "description": "Minimum firing distance: Bot ini mengimplementasikan strategi greedy yang memprioritaskan target musuh terdekat. Bot secara terus-menerus mengukur jarak ke target, mengatur orientasi badannya dengan rotasi paling minimal, dan menyesuaikan gerakan—maju jika target jauh, mundur jika target terlalu dekat, atau maju perlahan saat jarak menengah. Selain itu, gun bot berputar 360° secara terus-menerus untuk scanning yang optimal",
     "homepage": "«…»",
     "countryCodes": [ "«enter your country code, e.g. id»" ],
     "platform": ".Net 9.0",
     "programmingLang": "C#"
-  }
+}
   
