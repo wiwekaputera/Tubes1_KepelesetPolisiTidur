@@ -1,0 +1,56 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{827E0CD3-B72D-47B6-A68D-7590B98EB39B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "alternative-bots", "alternative-bots", "{A3963A42-BA02-1665-FEE3-9A6867D26CB0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KepelesetPolisiTidurAlt1", "src\alternative-bots\KepelesetPolisiTidurAlt1\KepelesetPolisiTidurAlt1.csproj", "{C7EC5F8D-16EB-E987-9CCC-09B5AF0AFA90}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KepelesetPolisiTidurAlt2", "src\alternative-bots\KepelesetPolisiTidurAlt2\KepelesetPolisiTidurAlt2.csproj", "{2EB0DE8C-6616-A02A-E5AA-834A9FC890D8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KepelesetPolisiTidurAlt3", "src\alternative-bots\KepelesetPolisiTidurAlt3\KepelesetPolisiTidurAlt3.csproj", "{9C255BB6-95D4-0645-8959-708346262C2F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "main-bot", "main-bot", "{4FCDFDB7-A417-3C3F-0910-8A045F02A9B3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KepelesetPolisiTidur", "src\main-bot\KepelesetPolisiTidur\KepelesetPolisiTidur.csproj", "{523B8491-0C7A-C90E-E714-981169853518}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C7EC5F8D-16EB-E987-9CCC-09B5AF0AFA90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7EC5F8D-16EB-E987-9CCC-09B5AF0AFA90}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7EC5F8D-16EB-E987-9CCC-09B5AF0AFA90}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7EC5F8D-16EB-E987-9CCC-09B5AF0AFA90}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2EB0DE8C-6616-A02A-E5AA-834A9FC890D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2EB0DE8C-6616-A02A-E5AA-834A9FC890D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2EB0DE8C-6616-A02A-E5AA-834A9FC890D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2EB0DE8C-6616-A02A-E5AA-834A9FC890D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C255BB6-95D4-0645-8959-708346262C2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C255BB6-95D4-0645-8959-708346262C2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C255BB6-95D4-0645-8959-708346262C2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C255BB6-95D4-0645-8959-708346262C2F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{523B8491-0C7A-C90E-E714-981169853518}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{523B8491-0C7A-C90E-E714-981169853518}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{523B8491-0C7A-C90E-E714-981169853518}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{523B8491-0C7A-C90E-E714-981169853518}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A3963A42-BA02-1665-FEE3-9A6867D26CB0} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
+		{C7EC5F8D-16EB-E987-9CCC-09B5AF0AFA90} = {A3963A42-BA02-1665-FEE3-9A6867D26CB0}
+		{2EB0DE8C-6616-A02A-E5AA-834A9FC890D8} = {A3963A42-BA02-1665-FEE3-9A6867D26CB0}
+		{9C255BB6-95D4-0645-8959-708346262C2F} = {A3963A42-BA02-1665-FEE3-9A6867D26CB0}
+		{4FCDFDB7-A417-3C3F-0910-8A045F02A9B3} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
+		{523B8491-0C7A-C90E-E714-981169853518} = {4FCDFDB7-A417-3C3F-0910-8A045F02A9B3}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F92ED327-2627-4346-A4EA-DA9905D0C5D3}
+	EndGlobalSection
+EndGlobal
