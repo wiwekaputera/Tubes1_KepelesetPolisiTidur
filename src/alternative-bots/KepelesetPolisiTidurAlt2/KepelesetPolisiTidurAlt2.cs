@@ -4,49 +4,79 @@ using Robocode.TankRoyale.BotApi.Events;
 
 public class KepelesetPolisiTidurAlt2 : Bot
 {
-    // The main method starts our bot
+    private int? targetId = null;
+    private int lostTargetCounter = 0;
+
     static void Main()
     {
         new KepelesetPolisiTidurAlt2().Start();
     }
 
-    // Constructor, which loads the bot config file
     KepelesetPolisiTidurAlt2() : base(BotInfo.FromFile("KepelesetPolisiTidurAlt2.json")) { }
 
-    // Called when a new round is started -> initialize and do some movement
     public override void Run()
     {
-        BodyColor = Color.FromArgb(0xFF, 0x00, 0x00);   // Red
-        TurretColor = Color.FromArgb(0xFF, 0xFF, 0xFF); // White
-        RadarColor = Color.FromArgb(0xFF, 0x00, 0x00);  // Red
-        BulletColor = Color.FromArgb(0xFF, 0xFF, 0xFF); // White
-        ScanColor = Color.FromArgb(0xFF, 0x00, 0x00);   // Red
-        TracksColor = Color.FromArgb(0xFF, 0xFF, 0xFF); // White
-        GunColor = Color.FromArgb(0xFF, 0x00, 0x00);    // Red
+        // Set warna biar keren
+        BodyColor = Color.Red;
+        TurretColor = Color.White;
+        RadarColor = Color.Red;
+        BulletColor = Color.White;
+        ScanColor = Color.Red;
+        TracksColor = Color.White;
+        GunColor = Color.Red;
 
-        // Repeat while the bot is running
+        // Gerak awal biar ga diem aja
+        Forward(100);
+        TurnRight(90);
+
+        // Loop utama
         while (IsRunning)
         {
-            Forward(100);
-            TurnGunRight(360);
-            Back(100);
-            TurnGunRight(360);
+            if (targetId == null)
+            {
+                TurnGunRight(10);  // Kalau belum ada target, scanning dulu
+            }
+            else
+            {
+                // Bergerak ke arah target sambil tembak
+                Forward(50);
+                Fire(3);
+
+                // Kalau target ilang lebih dari 30 tick, reset
+                lostTargetCounter++;
+                if (lostTargetCounter > 30)
+                {
+                    targetId = null;
+                    lostTargetCounter = 0;
+                }
+            }
         }
     }
 
-    // We saw another bot -> fire!
-    public override void OnScannedBot(ScannedBotEvent evt)
+   public override void OnScannedBot(ScannedBotEvent evt)
     {
-        Fire(1);
-    }
+        if (targetId == null)
+        {
+            targetId = evt.ScannedBotId;  // Kunci target pertama yang terlihat
+        }
+        else if (targetId == evt.ScannedBotId)
+        {
+            // Dapatkan sudut turret ke target
+            double gunBearing = GunBearingTo(evt.X, evt.Y);
 
-    // We were hit by a bullet -> turn perpendicular to the bullet
-    public override void OnHitByBullet(HitByBulletEvent evt)
-    {
-        // Calculate the bearing to the direction of the bullet
-        double bearing = CalcBearing(evt.Bullet.Direction);
+            // Putar turret ke arah target
+            TurnGunLeft(gunBearing);
 
-        // Turn 90 degrees to the bullet direction based on the bearing
-        TurnLeft(90 - bearing);
+            // Tembak full power
+            Fire(3);
+            lostTargetCounter = 0;  // Reset lost counter kalau kita masih melihat target
+
+            // Jika musuh jauh (> 100), mendekat
+            double distance = DistanceTo(evt.X, evt.Y);
+            if (distance > 100)
+            {
+                Forward(50);
+            }
+        }
     }
 }

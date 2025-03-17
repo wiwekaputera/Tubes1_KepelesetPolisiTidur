@@ -6,9 +6,9 @@
         "Hasri Fayadh",
         "I Made Wiweka"
     ],
-    "description": "Deskripsi strategi greedy yang digunakan",
+    "description": "Bot yang kejar musuh",
     "homepage": "«…»",
-    "countryCodes": [ "«enter your country code, e.g. id»" ],
+    "countryCodes": [ "id" ],
     "platform": ".Net 9.0",
     "programmingLang": "C#"
   }
