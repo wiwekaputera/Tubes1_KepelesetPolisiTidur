@@ -1,52 +1,93 @@
+using System;
 using System.Drawing;
 using Robocode.TankRoyale.BotApi;
 using Robocode.TankRoyale.BotApi.Events;
 
-public class KepelesetPolisiTidurAlt3 : Bot
-{
-    // The main method starts our bot
-    static void Main()
-    {
-        new KepelesetPolisiTidurAlt3().Start();
+/* Bntr deskripsinya nyusul */
+
+public class KepelesetPolisiTidurAlt2 : Bot {
+    private int bestTargetID = -1;
+    private double bestTargetAngle = double.MaxValue; // Ini untuk sudut mininum ke best target
+    private double targetX = 0;
+    private double targetY = 0;
+
+    static void Main() {
+        new KepelesetPolisiTidurAlt2().Start();
     }
 
-    // Constructor, which loads the bot config file
-    KepelesetPolisiTidurAlt3() : base(BotInfo.FromFile("KepelesetPolisiTidurAlt3.json")) { }
+    public KepelesetPolisiTidurAlt2() : base(BotInfo.FromFile("KepelesetPolisiTidurAlt3.json")) { }
 
-    // Called when a new round is started -> initialize and do some movement
     public override void Run()
     {
-        BodyColor = Color.FromArgb(0xFF, 0x00, 0x00);   // Red
-        TurretColor = Color.FromArgb(0xFF, 0xFF, 0xFF); // White
-        RadarColor = Color.FromArgb(0xFF, 0x00, 0x00);  // Red
-        BulletColor = Color.FromArgb(0xFF, 0xFF, 0xFF); // White
-        ScanColor = Color.FromArgb(0xFF, 0x00, 0x00);   // Red
-        TracksColor = Color.FromArgb(0xFF, 0xFF, 0xFF); // White
-        GunColor = Color.FromArgb(0xFF, 0x00, 0x00);    // Red
+        // Setting warna bot
+        BodyColor   = Color.FromArgb(0xFF, 0x10, 0x10, 0x10);
+        TurretColor = Color.FromArgb(0xFF, 0x30, 0x30, 0x30);
+        RadarColor  = Color.FromArgb(0xFF, 0x50, 0x50, 0x50);
+        GunColor    = Color.FromArgb(0xFF, 0x40, 0x40, 0x40);
+        TracksColor = Color.FromArgb(0xFF, 0x20, 0x20, 0x20);
+        BulletColor = Color.FromArgb(0xFF, 0xFF, 0xA0, 0x00);
+        ScanColor   = Color.FromArgb(0xFF, 0xFF, 0xA0, 0x00);
 
-        // Repeat while the bot is running
-        while (IsRunning)
-        {
-            Forward(100);
-            TurnGunRight(360);
-            Back(100);
-            TurnGunRight(360);
+        while (IsRunning) {
+            // Selalu scan area sekitar
+            TurnRadarRight(360);
+
+            if (bestTargetID != -1) {
+                TurnGunRight(NormalizeRelativeAngle(BearingTo(targetX, targetY) - GunDirection));
+
+                // Arahin bot ke target
+                double turnAngle = NormalizeRelativeAngle(BearingTo(targetX, targetY));
+                TurnRight(turnAngle);
+
+                double distance = DistanceTo(targetX, targetY);
+                if (distance > 150) {
+                    Forward(100);
+                } else if (distance < 50) {
+                    Back(100);
+                } else {
+                    Forward(50);
+                }
+            }
         }
     }
 
-    // We saw another bot -> fire!
-    public override void OnScannedBot(ScannedBotEvent evt)
-    {
-        Fire(1);
+    public override void OnScannedBot(ScannedBotEvent evt) {
+        double angleToTarget = Math.Abs(NormalizeRelativeAngle(BearingTo(evt.X, evt.Y) - GunDirection));
+
+        // Nyari target dengan minimum sudut
+        if (angleToTarget < bestTargetAngle) {
+            bestTargetAngle = angleToTarget;
+            bestTargetID = evt.ScannedBotId;
+            targetX = evt.X;
+            targetY = evt.Y;
+        }
+
+        // FIRE jika merupakan target terbaik
+        if (evt.ScannedBotId == bestTargetID) {
+            Fire(1);
+        }
     }
 
-    // We were hit by a bullet -> turn perpendicular to the bullet
-    public override void OnHitByBullet(HitByBulletEvent evt)
+    // Jika tertabrak tembok, mundur dan putar ke kanan 90 derajat
+    public override void OnHitWall(HitWallEvent evt)
     {
-        // Calculate the bearing to the direction of the bullet
-        double bearing = CalcBearing(evt.Bullet.Direction);
+        Back(50);
+        TurnRight(90);
+    }
 
-        // Turn 90 degrees to the bullet direction based on the bearing
-        TurnLeft(90 - bearing);
+    // Jika tertabrak, mundur dan putar ke kanan 45 derajat
+    public override void OnHitBot(HitBotEvent evt) {
+        Back(100);
+        TurnRight(45);
+    }
+
+    // Reset jika target mati
+    public override void OnBotDeath(BotDeathEvent evt)
+    {
+        if (evt.VictimId == bestTargetID)
+        {
+            bestTargetAngle = double.MaxValue;
+            bestTargetID = -1;
+        }
     }
 }
