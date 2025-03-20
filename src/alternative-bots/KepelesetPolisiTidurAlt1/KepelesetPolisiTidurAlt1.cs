@@ -6,10 +6,10 @@ using Robocode.TankRoyale.BotApi.Events;
  * KepelesetPolisiTidurAlt1 Bot
  * 
  * Overview:
- * - Bot ini mencari target terdekat, mengarahkan body ke target tersebut, dan bergerak sesuai ketentuan di poin berikutnya.
- * - Jika jarak ke target > 150, bot maju (Forward); jika < 50, bot mundur (Back); jika di antaranya, maju dengan kecepatan sedang.
- * - Gun akan terus melakukan rotasi 360° untuk scanning musuh dan fire apabila scanned bot = closest bot
- * - Saat terjadi tabrakan dengan dinding atau bot lain, bot akan mundur dan berputar untuk menghindar.
+ * - Bot bakal cari target terdekat, arahin body ke target tersebut, dan bergerak sesuai ketentuan di poin berikutnya.
+ * - Jarak ke target > 150, bot maju (Forward); Jarak < 50, bot mundur (Back); Jarak di antaranya, maju dengan kecepatan sedang.
+ * - Gun terus  berotasi 360 untuk scanning musuh dan fire apabila scanned bot = closest bot
+ * - Kalo tabrakan dengan dinding atau bot lain, bot akan mundur dan berputar untuk menghindar.
  */
 
 public class KepelesetPolisiTidurAlt1 : Bot
@@ -20,7 +20,7 @@ public class KepelesetPolisiTidurAlt1 : Bot
     // Variabel untuk menyimpan koordinat target terakhir yang terdeteksi
     private double targetX = 0;
     private double targetY = 0;
-    // Flag untuk menentukan arah rotasi gun (untuk scanning)
+    // Bool untuk menentukan arah rotasi gun (untuk scanning)
     private bool rotateGunRight = true;
 
     static void Main()
@@ -45,7 +45,7 @@ public class KepelesetPolisiTidurAlt1 : Bot
         {
             if (closestBotId != -1)
             {
-                // Jika ada target:
+                // Kalo ada target:
                 // Hitung perbedaan sudut antara arah bot saat ini dengan arah ke target, sehingga bot dapat menghadap langsung ke target
                 double turnAngle = NormalizeRelativeAngle(BearingTo(targetX, targetY));
                 TurnRight(turnAngle);
@@ -59,7 +59,7 @@ public class KepelesetPolisiTidurAlt1 : Bot
                 else
                     Forward(50);
                 
-                // Rotasi gun 360° dengan arah terus bergantian (biar scanning lebih merata)
+                // Rotasi gun 360 dengan arah terus bergantian (biar scanning lebih merata)
                 if (rotateGunRight)
                     TurnGunRight(360);
                 else
@@ -68,7 +68,7 @@ public class KepelesetPolisiTidurAlt1 : Bot
             }
             else
             {
-                // Jika tidak ada target, scan 360° dengan gun
+                // Kalo ga ada target, scan 360 dengan gun
                 if (rotateGunRight)
                     TurnGunRight(360);
                 else
@@ -78,7 +78,7 @@ public class KepelesetPolisiTidurAlt1 : Bot
         }
     }
 
-    // Update target terdekat berdasarkan scanning
+    // Update target berdasarkan jarak terdekat
     public override void OnScannedBot(ScannedBotEvent evt)
     {
         double dist = DistanceTo(evt.X, evt.Y);
@@ -93,25 +93,25 @@ public class KepelesetPolisiTidurAlt1 : Bot
         // Jika bot yang ter-scan adalah target terdekat, FIRE
         if (evt.ScannedBotId == closestBotId)
         {
-            Fire(1);
+            Fire(3);
         }
     }
 
-    // Saat terjadi tabrakan dengan dinding, mundur dan putar 90° untuk keluar dari dinding.
+    // Kalo nabrak dinding, mundur dan turnRight 90
     public override void OnHitWall(HitWallEvent evt)
     {
         Back(50);
         TurnRight(90);
     }
 
-    // Saat terjadi tabrakan dengan bot lain, mundur dan putar 45° untuk menghindari tabrakan berulang.
+    // Kalo tabrakan dengan bot lain, mundur dan turn right 45.
     public override void OnHitBot(HitBotEvent evt)
     {
         Back(100);
         TurnRight(45);
     }
 
-    // Jika target terdekat mati, reset tracking target sehingga bot bisa mencari target baru.
+    // Kalo current target mati, reset tracking target biar bot bisa cari target baru.
     public override void OnBotDeath(BotDeathEvent evt)
     {
         if (evt.VictimId == closestBotId)

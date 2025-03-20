@@ -2,51 +2,122 @@ using System.Drawing;
 using Robocode.TankRoyale.BotApi;
 using Robocode.TankRoyale.BotApi.Events;
 
+/*
+ * KepelesetPolisiTidur Bot
+ * 
+ * Overview:
+ * - Bot bakal cari target dengan HP (energy) terendah, arahin body ke target tersebut, dan bergerak sesuai ketentuan di poin berikutnya.
+ * - Jarak ke target > 150, bot maju (Forward); Jarak < 50, bot mundur (Back); Jarak di antaranya, maju dengan kecepatan sedang.
+ * - Gun terus  berotasi 360 untuk scanning musuh dan fire apabila scanned bot = lowest HP bot
+ * - Kalo tabrakan dengan dinding atau bot lain, bot akan mundur dan berputar untuk menghindar.
+ */
+
 public class KepelesetPolisiTidur : Bot
 {
-    // The main method starts our bot
+    // Variabel untuk melacak target dengan HP terendah
+    private double lowestHP = double.MaxValue;
+    private int targetId = -1;
+    // Variabel untuk menyimpan koordinat target terakhir yang terdeteksi
+    private double targetX = 0;
+    private double targetY = 0;
+    // Flag untuk menentukan arah rotasi gun (untuk scanning)
+    private bool rotateGunRight = true;
+
     static void Main()
     {
         new KepelesetPolisiTidur().Start();
     }
 
-    // Constructor, which loads the bot config file
-    KepelesetPolisiTidur() : base(BotInfo.FromFile("KepelesetPolisiTidur.json")) { }
+    public KepelesetPolisiTidur() : base(BotInfo.FromFile("KepelesetPolisiTidur.json")) { }
 
-    // Called when a new round is started -> initialize and do some movement
     public override void Run()
     {
-        BodyColor = Color.FromArgb(0xFF, 0x00, 0x00);   // Red
-        TurretColor = Color.FromArgb(0xFF, 0xFF, 0xFF); // White
-        RadarColor = Color.FromArgb(0xFF, 0x00, 0x00);  // Red
-        BulletColor = Color.FromArgb(0xFF, 0xFF, 0xFF); // White
-        ScanColor = Color.FromArgb(0xFF, 0x00, 0x00);   // Red
-        TracksColor = Color.FromArgb(0xFF, 0xFF, 0xFF); // White
-        GunColor = Color.FromArgb(0xFF, 0x00, 0x00);    // Red
+        // Setting warna bot
+        BodyColor   = Color.FromArgb(0xFF, 0x20, 0x20, 0x20);
+        TurretColor = Color.FromArgb(0xFF, 0x40, 0x40, 0x40);
+        RadarColor  = Color.FromArgb(0xFF, 0x60, 0x60, 0x60);
+        GunColor    = Color.FromArgb(0xFF, 0x55, 0x55, 0x55);
+        TracksColor = Color.FromArgb(0xFF, 0x30, 0x30, 0x30);
+        BulletColor = Color.FromArgb(0xFF, 0xFF, 0x90, 0x00);
+        ScanColor   = Color.FromArgb(0xFF, 0xFF, 0x90, 0x00);
 
-        // Repeat while the bot is running
         while (IsRunning)
         {
-            Forward(100);
-            TurnGunRight(360);
-            Back(100);
-            TurnGunRight(360);
+            if (targetId != -1)
+            {
+                // Kalo ada target (dengan HP terendah):
+                // Hitung perbedaan sudut antara arah bot saat ini dengan arah ke target, sehingga bot dapat menghadap langsung ke target
+                double turnAngle = NormalizeRelativeAngle(BearingTo(targetX, targetY));
+                TurnRight(turnAngle);
+
+                // Gerakan berdasarkan jarak ke target:
+                double dist = DistanceTo(targetX, targetY);
+                if (dist > 150)
+                    Forward(100);
+                else if (dist < 50)
+                    Back(100);
+                else
+                    Forward(50);
+                
+                // Rotasi gun 360 dengan arah terus bergantian (biar scanning lebih merata)
+                if (rotateGunRight)
+                    TurnGunRight(360);
+                else
+                    TurnGunLeft(360);
+                rotateGunRight = !rotateGunRight;
+            }
+            else
+            {
+                // Kalo ga ada target, scan 360 dengan gun
+                if (rotateGunRight)
+                    TurnGunRight(360);
+                else
+                    TurnGunLeft(360);
+                rotateGunRight = !rotateGunRight;
+            }
         }
     }
 
-    // We saw another bot -> fire!
+    // Update target berdasarkan HP terendah (energy)
     public override void OnScannedBot(ScannedBotEvent evt)
     {
-        Fire(1);
+        double enemyHP = evt.Energy;
+        if (enemyHP < lowestHP)
+        {
+            lowestHP = enemyHP;
+            targetId = evt.ScannedBotId;
+            targetX = evt.X;
+            targetY = evt.Y;
+        }
+        
+        // Jika bot yang ter-scan adalah target dengan HP terendah, FIREEE
+        if (evt.ScannedBotId == targetId)
+        {
+            Fire(3);
+        }
     }
 
-    // We were hit by a bullet -> turn perpendicular to the bullet
-    public override void OnHitByBullet(HitByBulletEvent evt)
+    // Kalo nabrak dinding, mundur dan turnRight 90
+    public override void OnHitWall(HitWallEvent evt)
     {
-        // Calculate the bearing to the direction of the bullet
-        double bearing = CalcBearing(evt.Bullet.Direction);
+        Back(50);
+        TurnRight(90);
+    }
 
-        // Turn 90 degrees to the bullet direction based on the bearing
-        TurnLeft(90 - bearing);
+    // Kalo tabrakan dengan bot lain, mundur dan turn right 45.
+    public override void OnHitBot(HitBotEvent evt)
+    {
+        Back(100);
+        TurnRight(45);
+    }
+
+    // Kalo current target mati, reset tracking target biar bot bisa cari target baru.
+    public override void OnBotDeath(BotDeathEvent evt)
+    {
+        if (evt.VictimId == targetId)
+        {
+            lowestHP = double.MaxValue;
+            targetId = -1;
+        }
     }
 }
