@@ -7,11 +7,11 @@ Semester II tahun 2024/2025
 Repositori ini merupakan bagian dari Tugas Besar 1 IF2211 Strategi Algoritma, yaitu pemanfaatan algoritma greedy dalam pembuatan bot untuk permainan Robocode TankRoyale. Empat bot (satu bot utama dan tiga bot alternatif) telaH dibuat dengan pendekatan heuristik yang berbeda.
 
 ## Bot Utama
-### **1. KepelesetPolisiTidur (Greedy berdasarkan HP/Energy Minimum)**
-- Memilih target dengan HP (energy) terendah di antara semua musuh yang terdeteksi.
+### **1. KepelesetPolisiTidur (Greedy berdasarkan HP+Jarak Minimum)**
+- Memilih target berdasarkan gabungan HP (energy) dan jarak, dengan menghitung skor = enemyHP + distance; target dengan skor terendah diprioritaskan.
 - Bergerak mendekati target dengan kecepatan berdasarkan jarak.
 - Terus memutar senjata 360° untuk mencari musuh.
-- Menembak saat bot yang terdeteksi adalah target dengan HP terendah.
+- Menembak saat bot yang terdeteksi adalah target dengan skor terendah.
 - Menangani tabrakan dengan bergerak mundur dan berputar.
 
 ## Bot Alternatif
@@ -34,7 +34,6 @@ Repositori ini merupakan bagian dari Tugas Besar 1 IF2211 Strategi Algoritma, ya
 1. Clone repositori ini:
    ```sh
    git clone https://github.com/wiwekaputera/Tubes1_KepelesetPolisiTidur.git
-   cd Tubes1_KepelesetPolisiTidur
    ```
 2. Buka *custom engine* `.jar` yang telah diunduh.
 3. Pilih menu **Config > Bot Root Directories**, lalu pilih parent folder yang berisi folder bot.

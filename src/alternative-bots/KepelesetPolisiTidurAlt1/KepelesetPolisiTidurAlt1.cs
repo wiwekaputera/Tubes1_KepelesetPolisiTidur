@@ -32,7 +32,6 @@ public class KepelesetPolisiTidurAlt1 : Bot
 
     public override void Run()
     {
-        // Setting warna bot
         BodyColor   = Color.FromArgb(0xFF, 0x20, 0x20, 0x20);
         TurretColor = Color.FromArgb(0xFF, 0x40, 0x40, 0x40);
         RadarColor  = Color.FromArgb(0xFF, 0x60, 0x60, 0x60);
