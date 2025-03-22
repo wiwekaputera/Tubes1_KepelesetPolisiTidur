@@ -5,17 +5,17 @@ using Robocode.TankRoyale.BotApi.Events;
 
 /* Bntr deskripsinya nyusul */
 
-public class KepelesetPolisiTidurAlt2 : Bot {
+public class KepelesetPolisiTidurAlt3 : Bot {
     private int bestTargetID = -1;
     private double bestTargetAngle = double.MaxValue; // Ini untuk sudut mininum ke best target
     private double targetX = 0;
     private double targetY = 0;
 
     static void Main() {
-        new KepelesetPolisiTidurAlt2().Start();
+        new KepelesetPolisiTidurAlt3().Start();
     }
 
-    public KepelesetPolisiTidurAlt2() : base(BotInfo.FromFile("KepelesetPolisiTidurAlt3.json")) { }
+    public KepelesetPolisiTidurAlt3() : base(BotInfo.FromFile("KepelesetPolisiTidurAlt3.json")) { }
 
     public override void Run()
     {
