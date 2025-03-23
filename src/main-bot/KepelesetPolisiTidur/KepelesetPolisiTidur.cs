@@ -3,25 +3,24 @@ using Robocode.TankRoyale.BotApi;
 using Robocode.TankRoyale.BotApi.Events;
 
 /*
- * KepelesetPolisiTidur Bot (Greedy: HP + Jarak)
+ * KepelesetPolisiTidur Bot
  * 
  * Overview:
- * - Bot bakal cari target berdasarkan gabungan HP (energy) dan jarak.
- * - Hitung skor target = enemyHP + distance. target dengan skor terendah diprioritaskan.
- * - Arahin body ke target tersebut. Kalo jarak > 150, maju penuh; kalo < 50, mundur; kalo di antaranya, maju dengan kecepatan sedang.
- * - Gun terus berotasi 360 buat scanning, dan FIRE kalo target yang dipilih terdeteksi.
+ * - Bot bakal cari target terdekat, arahin body ke target tersebut, dan bergerak sesuai ketentuan di poin berikutnya.
+ * - Jarak ke target > 150, bot maju (Forward); Jarak < 50, bot mundur (Back); Jarak di antaranya, maju dengan kecepatan sedang.
+ * - Gun terus  berotasi 360 untuk scanning musuh dan fire apabila scanned bot = closest bot
  * - Kalo tabrakan dengan dinding atau bot lain, bot akan mundur dan berputar untuk menghindar.
  */
 
 public class KepelesetPolisiTidur : Bot
 {
-    // Variabel buat tracking target berdasarkan skor (HP + jarak)
-    private double bestScore = double.MaxValue;
-    private int bestTargetId = -1;
-    // Variabel buat simpen koordinat target terakhir yang dipindai
+    // Variabel untuk melacak target terdekat
+    private double closestDistance = double.MaxValue;
+    private int closestBotId = -1;
+    // Variabel untuk menyimpan koordinat target terakhir yang terdeteksi
     private double targetX = 0;
     private double targetY = 0;
-    // Flag buat tentuin arah rotasi gun (buat scanning)
+    // Bool untuk menentukan arah rotasi gun (untuk scanning)
     private bool rotateGunRight = true;
 
     static void Main()
@@ -43,14 +42,14 @@ public class KepelesetPolisiTidur : Bot
 
         while (IsRunning)
         {
-            if (bestTargetId != -1)
+            if (closestBotId != -1)
             {
-                // Kalo ada target (berdasarkan skor HP + jarak):
-                // Hitung perbedaan sudut antara arah bot dan target, arahin bot ke target tsb
+                // Kalo ada target:
+                // Hitung perbedaan sudut antara arah bot saat ini dengan arah ke target, sehingga bot dapat menghadap langsung ke target
                 double turnAngle = NormalizeRelativeAngle(BearingTo(targetX, targetY));
                 TurnRight(turnAngle);
 
-                // Gerakan sesuai jarak target:
+                // Gerakan berdasarkan jarak ke target:
                 double dist = DistanceTo(targetX, targetY);
                 if (dist > 150)
                     Forward(100);
@@ -59,7 +58,7 @@ public class KepelesetPolisiTidur : Bot
                 else
                     Forward(50);
                 
-                // Rotasi gun 360 dengan arah bergantian (biar scanning merata)
+                // Rotasi gun 360 dengan arah terus bergantian (biar scanning lebih merata)
                 if (rotateGunRight)
                     TurnGunRight(360);
                 else
@@ -68,7 +67,7 @@ public class KepelesetPolisiTidur : Bot
             }
             else
             {
-                // Kalo ga ada target, scan 360 pake gun
+                // Kalo ga ada target, scan 360 dengan gun
                 if (rotateGunRight)
                     TurnGunRight(360);
                 else
@@ -78,23 +77,20 @@ public class KepelesetPolisiTidur : Bot
         }
     }
 
-    // Update target dengan skor terbaik dari gabungan HP dan jarak
+    // Update target berdasarkan jarak terdekat
     public override void OnScannedBot(ScannedBotEvent evt)
     {
         double dist = DistanceTo(evt.X, evt.Y);
-        double enemyHP = evt.Energy;
-        double score = enemyHP + dist;
-        
-        if (score < bestScore)
+        if (dist < closestDistance)
         {
-            bestScore = score;
-            bestTargetId = evt.ScannedBotId;
+            closestDistance = dist;
+            closestBotId = evt.ScannedBotId;
             targetX = evt.X;
             targetY = evt.Y;
         }
         
-        // Kalo bot yang ter-scan adalah target dengan skor terendah, FIREEE
-        if (evt.ScannedBotId == bestTargetId)
+        // Jika bot yang ter-scan adalah target terdekat, FIRE
+        if (evt.ScannedBotId == closestBotId)
         {
             Fire(3);
         }
@@ -107,20 +103,20 @@ public class KepelesetPolisiTidur : Bot
         TurnRight(90);
     }
 
-    // Kalo tabrakan dengan bot lain, mundur dan turnRight 45
+    // Kalo tabrakan dengan bot lain, mundur dan turn right 45.
     public override void OnHitBot(HitBotEvent evt)
     {
         Back(100);
         TurnRight(45);
     }
 
-    // Kalo current target mati, reset tracking target biar bisa cari target baru.
+    // Kalo current target mati, reset tracking target biar bot bisa cari target baru.
     public override void OnBotDeath(BotDeathEvent evt)
     {
-        if (evt.VictimId == bestTargetId)
+        if (evt.VictimId == closestBotId)
         {
-            bestScore = double.MaxValue;
-            bestTargetId = -1;
+            closestDistance = double.MaxValue;
+            closestBotId = -1;
         }
     }
 }

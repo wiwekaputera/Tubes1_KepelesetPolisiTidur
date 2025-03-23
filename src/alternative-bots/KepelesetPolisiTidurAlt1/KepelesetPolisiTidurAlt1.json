@@ -6,10 +6,10 @@
         "Hasri Fayadh",
         "I Made Wiweka"
     ],
-    "description": "Minimum firing distance",
+    "description": "Minimum Score (HP + Distance) Targetting Bot",
     "homepage": "«…»",
     "countryCodes": [ "«enter your country code, e.g. id»" ],
     "platform": ".Net 9.0",
     "programmingLang": "C#"
-}
+  }
   
