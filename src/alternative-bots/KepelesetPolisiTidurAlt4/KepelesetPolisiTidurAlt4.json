@@ -1,0 +1,15 @@
+{
+    "name": "KepelesetPolisiTidurAlt4",
+    "version": "1.0",
+    "authors": [
+        "Naufarrel Zhafif",
+        "Hasri Fayadh",
+        "I Made Wiweka"
+    ],
+    "description": "Test 4",
+    "homepage": "«…»",
+    "countryCodes": [ "id" ],
+    "platform": ".Net 9.0",
+    "programmingLang": "C#"
+  }
+  

@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <RootNamespace>alternative-bots</RootNamespace>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net9.0</TargetFramework>
+        <LangVersion>10.0</LangVersion>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Robocode.TankRoyale.BotApi" Version="0.30.0"/>
+        <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.2"/>
+        <None Include="KepelesetPolisiTidurAlt5.json">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+</Project>
