@@ -3,12 +3,14 @@ using System.Drawing;
 using Robocode.TankRoyale.BotApi;
 using Robocode.TankRoyale.BotApi.Events;
 
+/* */
+
 public class KepelesetPolisiTidurAlt3 : Bot
 {
-    private double lastEnemyBearing;
-    private double lastEnemyDistance;
+    private double lastEnemyAngle; // Simpan sudut terakhir ke musuh yg ke-detect
+    private double lastEnemyDistance; // Simpan jarak terakhir ke musuh yg ke-detect
     
-    static void Main(string[] args)
+    static void Main()
     {
         new KepelesetPolisiTidurAlt3().Start();
     }
@@ -28,27 +30,35 @@ public class KepelesetPolisiTidurAlt3 : Bot
         
         while (IsRunning)
         {
-            MoveSmart();
-            TurnGunRight(360);
+            MoveBot(); // Menggerakan Bot
+            TurnGunRight(360); // Menggerakan Gun
         }
     }
 
-    private void MoveSmart()
+    // Gerakan dibuat random agar tidak mudah terkena tembakan musuh
+    private void MoveBot()
     {
-        Forward(80);
+        Forward(Random.Shared.Next(50, 151));
+
         if (Random.Shared.Next(0, 2) == 0)
-            TurnRight(30); // Mengubah sudut gerakan secara acak
+            TurnRight(Random.Shared.Next(15, 91));
         else
-            TurnLeft(30);
-        Back(80);
+            TurnLeft(Random.Shared.Next(15, 91));
+
+        Back(Random.Shared.Next(50, 151));
+
+        if (Random.Shared.Next(0, 2) == 0)
+            TurnRight(Random.Shared.Next(15, 91));
+        else
+            TurnLeft(Random.Shared.Next(15, 91));
     }
 
     public override void OnScannedBot(ScannedBotEvent evt)
     {
-        lastEnemyBearing = NormalizeRelativeAngle(evt.Direction - GunDirection);
+        lastEnemyAngle = NormalizeRelativeAngle(evt.Direction - GunDirection);
         lastEnemyDistance = DistanceTo(evt.X, evt.Y);
 
-        // Menyesuaikan tembakan agar efisien sesuai dengan sisa energy
+        // Tembakan disesuaikan dengan energi yang dimiliki bot dan jarak dengan musuh
         double fire;
         if (Energy < 20) fire = 1;
         else if (evt.Speed == 0 || DistanceTo(evt.X, evt.Y) < 200) fire = 3;
@@ -64,7 +74,7 @@ public class KepelesetPolisiTidurAlt3 : Bot
     public override void OnHitByBullet(HitByBulletEvent evt)
     {
         // Jika terkena tembakan, maka bot akan mengubah arah gerak
-        Back(50);
+        Back(150);
         if (Random.Shared.Next(0, 2) == 0)
             TurnRight(45);
         else
@@ -74,14 +84,14 @@ public class KepelesetPolisiTidurAlt3 : Bot
     // Jika terkena tembok, bot mengubah arah geraknya
     public override void OnHitWall(HitWallEvent evt)
     {
-        Back(50);
+        Back(150);
         TurnRight(90);
     }
 
     // Jika terkena bot lain, bot mengubah arah geraknya
     public override void OnHitBot(HitBotEvent evt)
     {
-        Back(100);
+        Back(150);
         TurnRight(45);
     }
 }
