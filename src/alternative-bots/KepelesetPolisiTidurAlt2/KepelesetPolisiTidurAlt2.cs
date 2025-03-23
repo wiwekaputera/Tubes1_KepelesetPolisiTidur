@@ -6,7 +6,7 @@ using Robocode.TankRoyale.BotApi.Events;
  * KepelesetPolisiTidurAlt2
  * 
  * Strategy:
- * - Greedy Least-Energy: selalu target bot dengan energi paling rendah
+ * - First-Scanned Lock: target bot pertama yang discan, kunci sampai dia mati
  * - Gun muter 360 untuk scanning + fire kalau musuh yang discan = target
  */
 
@@ -15,7 +15,6 @@ public class KepelesetPolisiTidurAlt2 : Bot
     private int? targetId = null;
     private double targetX = 0;
     private double targetY = 0;
-    private double targetEnergy = double.MaxValue;
 
     private bool rotateGunRight = true;
 
@@ -36,11 +35,9 @@ public class KepelesetPolisiTidurAlt2 : Bot
         {
             if (targetId != null)
             {
-                // Putar body ke arah target
                 double turnAngle = NormalizeRelativeAngle(BearingTo(targetX, targetY));
                 TurnRight(turnAngle);
 
-                // Gerak tergantung jarak
                 double dist = DistanceTo(targetX, targetY);
                 if (dist > 150)
                     Forward(100);
@@ -61,25 +58,29 @@ public class KepelesetPolisiTidurAlt2 : Bot
 
     public override void OnScannedBot(ScannedBotEvent evt)
     {
-        // Selalu update ke musuh dengan energi paling rendah
-        if (evt.Energy < targetEnergy)
+        // Ambil target pertama yang discan
+        if (targetId == null)
         {
             targetId = evt.ScannedBotId;
             targetX = evt.X;
             targetY = evt.Y;
-            targetEnergy = evt.Energy;
         }
 
+        // Kalau yang discan adalah target kita, update posisi & tembak
         if (evt.ScannedBotId == targetId)
         {
+            targetX = evt.X;
+            targetY = evt.Y;
             Fire(3);
         }
     }
 
-    public override void OnTick(TickEvent evt)
+    public override void OnBotDeath(BotDeathEvent evt)
     {
-        // Reset energi terendah agar selalu cari yang terbaru tiap tick
-        targetEnergy = double.MaxValue;
+        if (evt.VictimId == targetId)
+        {
+            targetId = null;
+        }
     }
 
     public override void OnHitWall(HitWallEvent evt)
@@ -92,14 +93,5 @@ public class KepelesetPolisiTidurAlt2 : Bot
     {
         Back(100);
         TurnRight(45);
-    }
-
-    public override void OnBotDeath(BotDeathEvent evt)
-    {
-        if (evt.VictimId == targetId)
-        {
-            targetId = null;
-            targetEnergy = double.MaxValue;
-        }
     }
 }
