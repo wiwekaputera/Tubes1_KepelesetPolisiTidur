@@ -59,13 +59,13 @@ public class KepelesetPolisiTidurAlt3 : Bot
         lastEnemyDistance = DistanceTo(evt.X, evt.Y);
 
         // Tembakan disesuaikan dengan energi yang dimiliki bot dan jarak dengan musuh
-        double fire;
-        if (Energy < 20) fire = 1;
-        else if (evt.Speed == 0 || DistanceTo(evt.X, evt.Y) < 200) fire = 3;
-        else if (DistanceTo(evt.X, evt.Y) < 500) fire = 2;
-        else fire = 1;
+        double firePower = 0;
+        if (Energy < 20) firePower = 1;
+        else if (evt.Speed == 0 || DistanceTo(evt.X, evt.Y) < 200) firePower = 3;
+        else if (DistanceTo(evt.X, evt.Y) < 500) firePower = 2;
+        else firePower = 1;
 
-        Fire(fire);
+        Fire(firePower);
         
         // Ngarahin gun ke musuh
         TurnGunRight(NormalizeRelativeAngle(evt.Direction - GunDirection));
