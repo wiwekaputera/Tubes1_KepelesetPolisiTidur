@@ -7,24 +7,34 @@ Semester II tahun 2024/2025
 Repositori ini merupakan bagian dari Tugas Besar 1 IF2211 Strategi Algoritma, yaitu pemanfaatan algoritma greedy dalam pembuatan bot untuk permainan Robocode TankRoyale. Empat bot (satu bot utama dan tiga bot alternatif) telaH dibuat dengan pendekatan heuristik yang berbeda.
 
 ## Bot Utama
-### **1. KepelesetPolisiTidur (Greedy berdasarkan HP+Jarak Minimum)**
-- Memilih target berdasarkan gabungan HP (energy) dan jarak, dengan menghitung skor = enemyHP + distance; target dengan skor terendah diprioritaskan.
-- Bergerak mendekati target dengan kecepatan berdasarkan jarak.
-- Terus memutar senjata 360° untuk mencari musuh.
-- Menembak saat bot yang terdeteksi adalah target dengan skor terendah.
-- Menangani tabrakan dengan bergerak mundur dan berputar.
-
 ## Bot Alternatif
-### **2. KepelesetPolisiTidurAlt1 (Greedy berdasarkan Jarak Tembak Minimum)**
+### **1. KepelesetPolisiTidur (Greedy berdasarkan Jarak Tembak Minimum)**
 - Memilih musuh terdekat sebagai target.
 - Bergerak mendekati target dengan kecepatan berdasarkan jarak.
 - Terus memutar senjata 360° untuk mencari musuh.
 - Menembak saat bot yang terdeteksi adalah musuh terdekat.
 - Menangani tabrakan dengan bergerak mundur dan berputar.
 
-### **3. Placeholder**
+### **2. KepelesetPolisiTidurAlt1 (Greedy berdasarkan HP+Jarak Minimum)**
+- Memilih target berdasarkan gabungan HP (energy) dan jarak, dengan menghitung skor = enemyHP + distance; target dengan skor terendah diprioritaskan.
+- Bergerak mendekati target dengan kecepatan berdasarkan jarak.
+- Terus memutar senjata 360° untuk mencari musuh.
+- Menembak saat bot yang terdeteksi adalah target dengan skor terendah.
+- Menangani tabrakan dengan bergerak mundur dan berputar.
 
-### **4. Placeholder**
+### **3. KepelesetPolisiTidurAlt2 (Greedy berdasarkan pendekatan first-scanned target)**
+- Memilih dan mengunci target yang pertama dideteksi, lalu mempertahankan target tersebut sampai mati.
+- Bergerak mendekati target dengan kecepatan berdasarkan jarak.
+- Terus memutar senjata 360° untuk mencari musuh.
+- Apabila target sudah mati, bot akan melakukan reset dan pemindaian ulang.
+- Menangani tabrakan dengan bergerak mundur dan berputar.
+
+### **4. KepelesetPolisiTidurAlt3**
+- Memilih target yang pertama kali dideteksi.
+- Bergerak random agar tidak mudah ditembak oleh bot lain.
+- Terus melakukan pemindaian 360°
+- Apabila terdeteksi bot, kekuatan tembakan akan disesuaikan berdasarkan energi yang dimiliki bot dan jarak dengan bot target.
+- Menangani tabrakan dan terkena tembak dengan mundur dan berputar
 
 ## Persyaratan
 - [.NET 6.0+](https://dotnet.microsoft.com/download)
