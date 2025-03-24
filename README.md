@@ -7,7 +7,6 @@ Semester II tahun 2024/2025
 Repositori ini merupakan bagian dari Tugas Besar 1 IF2211 Strategi Algoritma, yaitu pemanfaatan algoritma greedy dalam pembuatan bot untuk permainan Robocode TankRoyale. Empat bot (satu bot utama dan tiga bot alternatif) telaH dibuat dengan pendekatan heuristik yang berbeda.
 
 ## Bot Utama
-## Bot Alternatif
 ### **1. KepelesetPolisiTidur (Greedy berdasarkan Jarak Tembak Minimum)**
 - Memilih musuh terdekat sebagai target.
 - Bergerak mendekati target dengan kecepatan berdasarkan jarak.
@@ -15,6 +14,7 @@ Repositori ini merupakan bagian dari Tugas Besar 1 IF2211 Strategi Algoritma, ya
 - Menembak saat bot yang terdeteksi adalah musuh terdekat.
 - Menangani tabrakan dengan bergerak mundur dan berputar.
 
+## Bot Alternatif
 ### **2. KepelesetPolisiTidurAlt1 (Greedy berdasarkan HP+Jarak Minimum)**
 - Memilih target berdasarkan gabungan HP (energy) dan jarak, dengan menghitung skor = enemyHP + distance; target dengan skor terendah diprioritaskan.
 - Bergerak mendekati target dengan kecepatan berdasarkan jarak.
