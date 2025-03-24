@@ -29,7 +29,7 @@ Repositori ini merupakan bagian dari Tugas Besar 1 IF2211 Strategi Algoritma, ya
 - Apabila target sudah mati, bot akan melakukan reset dan pemindaian ulang.
 - Menangani tabrakan dengan bergerak mundur dan berputar.
 
-### **4. KepelesetPolisiTidurAlt3**
+### **4. KepelesetPolisiTidurAlt3 (Greedy berdasarkan pendekatan Energy Optimization Firing dan Random Move)**
 - Memilih target yang pertama kali dideteksi.
 - Bergerak random agar tidak mudah ditembak oleh bot lain.
 - Terus melakukan pemindaian 360°
